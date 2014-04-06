@@ -1333,6 +1333,20 @@ public class ParserGenerator {
                       implSuper.indexOf("<") < implSuper.indexOf(">") &&
                       !javaHelper.findClassMethods(implSuperRaw, JavaHelper.MethodType.INSTANCE, "StubBasedPsiElementBase", 2).isEmpty()
                       ? implSuper.substring(implSuper.indexOf("<") + 1, implSuper.indexOf(">")) : null;
+    
+    if (stubName == null) {
+      String extendName = getAttribute(rule, KnownAttribute.EXTENDS);
+      if (extendName != null) {
+        BnfRule extendsRule = myFile.getRule(extendName);
+        if (extendsRule != null) {
+          String parentStubClass = getAttribute(extendsRule, KnownAttribute.STUB_CLASS);
+          if (StringUtil.isNotEmpty(parentStubClass)) {
+            stubName = parentStubClass;
+          }
+        }
+      }
+    }
+    
     if (stubName != null) imports.add(ISTUBELEMENTTYPE_CLASS);
 
     Set<String> visitedConstructors = ContainerUtil.newHashSet(AST_NODE_CLASS);
@@ -1404,7 +1418,7 @@ public class ParserGenerator {
       switch (methodInfo.type) {
         case 1:
         case 2:
-          generatePsiAccessor(methodInfo, intf);
+          generatePsiAccessor(rule, methodInfo, intf);
           break;
         case 3:
           generateUserPsiAccessors(rule, methodInfo, intf);
@@ -1471,7 +1485,7 @@ public class ParserGenerator {
   }
 
 
-  private void generatePsiAccessor(RuleMethodsHelper.MethodInfo methodInfo, boolean intf) {
+  private void generatePsiAccessor(BnfRule rule, RuleMethodsHelper.MethodInfo methodInfo, boolean intf) {
     RuleGraphHelper.Cardinality type = methodInfo.cardinality;
     boolean isToken = methodInfo.rule == null;
 
@@ -1493,13 +1507,13 @@ public class ParserGenerator {
     String tail = intf ? "();" : "() {";
     out((intf ? "" : "public ") + (many ? myShortener.fun(CommonClassNames.JAVA_UTIL_LIST) + "<" : "") + className + (many ? "> " : " ") + getterName + tail);
     if (!intf) {
-      out("return " + generatePsiAccessorImplCall(methodInfo) + ";");
+      out("return " + generatePsiAccessorImplCall(rule, methodInfo) + ";");
       out("}");
     }
     newLine();
   }
 
-  private String generatePsiAccessorImplCall(@NotNull RuleMethodsHelper.MethodInfo methodInfo) {
+  private String generatePsiAccessorImplCall(BnfRule rule, @NotNull RuleMethodsHelper.MethodInfo methodInfo) {
     boolean isToken = methodInfo.rule == null;
 
     RuleGraphHelper.Cardinality type = methodInfo.cardinality;
@@ -1510,11 +1524,19 @@ public class ParserGenerator {
     }
     else {
       String className = myShortener.fun(getAccessorType(methodInfo.rule));
+      String stubClassName = getAttribute(methodInfo.rule, KnownAttribute.STUB_CLASS);
+      String parentStubClass = getAttribute(rule, KnownAttribute.STUB_CLASS);
+      stubClassName = StringUtil.isEmpty(stubClassName) ? null : myShortener.fun(stubClassName);
+      boolean stubAccess = stubClassName != null && !StringUtil.isEmpty(parentStubClass);
       if (many) {
-        return "PsiTreeUtil.getChildrenOfTypeAsList(this, " + className + ".class)";
+        return stubAccess ? 
+          "findChildrenByClass(" + className + ".class, " + stubClassName + ".class)" :
+          "PsiTreeUtil.getChildrenOfTypeAsList(this, " + className + ".class)";
       }
       else {
-        return (type == REQUIRED ? "findNotNullChildByClass" : "findChildByClass") + "(" + className + ".class)";
+        return (type == REQUIRED ? "findNotNullChildByClass" : "findChildByClass") + "(" + className + ".class"
+          + (stubAccess ? ", " + stubClassName + ".class" : "")
+          + ")";
       }
     }
   }
@@ -1582,7 +1604,7 @@ public class ParserGenerator {
         targetCall = getGetterName(item) + (targetInfo.cardinality.many() ? "List" : "") + "()";
       }
       else {
-        targetCall = generatePsiAccessorImplCall(targetInfo);
+        targetCall = generatePsiAccessorImplCall(startRule, targetInfo);
       }
       sb.append(context).append(targetCall).append(";\n");
 

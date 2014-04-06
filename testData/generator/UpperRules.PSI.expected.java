@@ -31,6 +31,15 @@ import com.intellij.psi.PsiElement;
 
 public interface Abc extends PsiElement {
 
+  @Nullable
+  AbcOne getAbcOne();
+
+  @Nullable
+  AbcTwo getAbcTwo();
+
+  @NotNull
+  Prefix getPrefix();
+
 }
 // ---- AbcOne.java -----------------
 //header.txt
@@ -53,6 +62,12 @@ import com.intellij.psi.PsiElement;
 
 public interface AbcPin extends PsiElement {
 
+  @Nullable
+  AbcOne getAbcOne();
+
+  @Nullable
+  AbcTwo getAbcTwo();
+
   @NotNull
   Prefix getPrefix();
 
@@ -66,6 +81,15 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
 public interface AbcSeq extends PsiElement {
+
+  @NotNull
+  AbcOne getAbcOne();
+
+  @NotNull
+  AbcTwo getAbcTwo();
+
+  @NotNull
+  Prefix getPrefix();
 
 }
 // ---- AbcTwo.java -----------------
@@ -108,5 +132,217 @@ public interface Root extends PsiElement {
 
   @NotNull
   List<AbcSeq> getAbcSeqList();
+
+}
+// ---- AbcImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class AbcImpl extends ASTWrapperPsiElement implements Abc {
+
+  public AbcImpl(ASTNode node) {
+    super(node);
+  }
+
+  @Override
+  @Nullable
+  public AbcOne getAbcOne() {
+    return findChildByClass(AbcOne.class);
+  }
+
+  @Override
+  @Nullable
+  public AbcTwo getAbcTwo() {
+    return findChildByClass(AbcTwo.class);
+  }
+
+  @Override
+  @NotNull
+  public Prefix getPrefix() {
+    return findNotNullChildByClass(Prefix.class);
+  }
+
+}
+// ---- AbcOneImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class AbcOneImpl extends ASTWrapperPsiElement implements AbcOne {
+
+  public AbcOneImpl(ASTNode node) {
+    super(node);
+  }
+
+}
+// ---- AbcPinImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class AbcPinImpl extends ASTWrapperPsiElement implements AbcPin {
+
+  public AbcPinImpl(ASTNode node) {
+    super(node);
+  }
+
+  @Override
+  @Nullable
+  public AbcOne getAbcOne() {
+    return findChildByClass(AbcOne.class);
+  }
+
+  @Override
+  @Nullable
+  public AbcTwo getAbcTwo() {
+    return findChildByClass(AbcTwo.class);
+  }
+
+  @Override
+  @NotNull
+  public Prefix getPrefix() {
+    return findNotNullChildByClass(Prefix.class);
+  }
+
+}
+// ---- AbcSeqImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class AbcSeqImpl extends ASTWrapperPsiElement implements AbcSeq {
+
+  public AbcSeqImpl(ASTNode node) {
+    super(node);
+  }
+
+  @Override
+  @NotNull
+  public AbcOne getAbcOne() {
+    return findNotNullChildByClass(AbcOne.class);
+  }
+
+  @Override
+  @NotNull
+  public AbcTwo getAbcTwo() {
+    return findNotNullChildByClass(AbcTwo.class);
+  }
+
+  @Override
+  @NotNull
+  public Prefix getPrefix() {
+    return findNotNullChildByClass(Prefix.class);
+  }
+
+}
+// ---- AbcTwoImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class AbcTwoImpl extends ASTWrapperPsiElement implements AbcTwo {
+
+  public AbcTwoImpl(ASTNode node) {
+    super(node);
+  }
+
+}
+// ---- PrefixImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class PrefixImpl extends ASTWrapperPsiElement implements Prefix {
+
+  public PrefixImpl(ASTNode node) {
+    super(node);
+  }
+
+}
+// ---- RootImpl.java -----------------
+//header.txt
+package generated.psi.impl;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import static generated.GeneratedTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import generated.psi.*;
+
+public class RootImpl extends ASTWrapperPsiElement implements Root {
+
+  public RootImpl(ASTNode node) {
+    super(node);
+  }
+
+  @Override
+  @NotNull
+  public List<Abc> getAbcList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, Abc.class);
+  }
+
+  @Override
+  @NotNull
+  public List<AbcPin> getAbcPinList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AbcPin.class);
+  }
+
+  @Override
+  @NotNull
+  public List<AbcSeq> getAbcSeqList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, AbcSeq.class);
+  }
 
 }
